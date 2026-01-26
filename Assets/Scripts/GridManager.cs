@@ -9,16 +9,13 @@ public class GridManager : MonoBehaviour
     public float cellSize = 1f;
 
     [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
-    [SerializeField] private GameObject theseusPrefab;
-    [SerializeField] private GameObject minotaurPrefab;
+    [SerializeField] private PlayerSpawner playerSpawner;
 
     private Theseus theseus;
     private Minotaur minotaur;
 
     private Cell[,] grid;
     private Vector2Int exitPos;
-    private Vector2Int theseusPos;
-    private Vector2Int minotaurPos;
 
     private bool isAnimating;
     private bool isProcessingTurn;
@@ -41,6 +38,12 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        if (playerSpawner == null)
+        {
+            Debug.LogError("Missing player spawner");
+            return;
+        }
+
         CreateGrid();
         SetupGrid();
         SetupCharacters();
@@ -48,7 +51,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        if (theseus != null)
+        if (theseus != null && !isProcessingTurn)
         {
             theseus.HandleInput();
         }
@@ -140,15 +143,11 @@ public class GridManager : MonoBehaviour
 
     private void SetupCharacters()
     {
-        GameObject theseusObject = Instantiate(theseusPrefab);
-        theseus = theseusObject.GetComponent<Theseus>();
-        theseus.name = "Theseus";
-        theseus.Initialize(this, new Vector2Int(0, 0));
+        Vector2Int theseusStartPos = new Vector2Int(0, 0);
+        Vector2Int minotaurStartPos = new Vector2Int(4, 4);
 
-        GameObject minotaurObject = Instantiate(minotaurPrefab);
-        minotaur = minotaurObject.GetComponent<Minotaur>();
-        minotaur.name = "Minotaur";
-        minotaur.Initialize(this, new Vector2Int(4, 4));
+        theseus = playerSpawner.SpawnTheseus(this, theseusStartPos);
+        minotaur = playerSpawner.SpawnMinotaur(this, minotaurStartPos);
     }
 
 
