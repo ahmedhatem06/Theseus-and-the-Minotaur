@@ -152,6 +152,8 @@ MonoBehaviour:
   height: 6
   cellSize: 1
   cellPrefab: {fileID: 3733982407107112395, guid: f6933876de37b45df8e2f0678e870b0b, type: 3}
+  theseusPrefab: {fileID: 3689196902862139945, guid: 0e7275de1aee14e5f9135257552d9f58, type: 3}
+  minotaurPrefab: {fileID: 2278862353275308010, guid: 4cd033cbb1e434f4abd545ff4e61ef11, type: 3}
 --- !u!4 &441736069
 Transform:
   m_ObjectHideFlags: 0
