@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
     {
         if (cellPrefab == null)
         {
-            Debug.LogError($"Missing cell prefab");
+            Debug.LogError("Missing cell prefab");
             return;
         }
 
@@ -35,10 +35,12 @@ public class GridManager : MonoBehaviour
     private void SetupCharacters()
     {
         theseus = Instantiate(theseusPrefab);
-        theseus.name = "theseus";
+        theseus.name = "Theseus";
 
         minotaur = Instantiate(minotaurPrefab);
-        minotaur.name = "minotaur";
+        minotaur.name = "Minotaur";
+
+        UpdatePlayersPositions();
     }
 
     private void Update()
@@ -49,6 +51,7 @@ public class GridManager : MonoBehaviour
     private void HandleInput()
     {
         Vector2Int direction = Vector2Int.zero;
+
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             direction = Vector2Int.up;
@@ -70,22 +73,85 @@ public class GridManager : MonoBehaviour
             //Wait.
         }
 
-        MoveTheseus(direction);
+        if (direction != Vector2Int.zero)
+        {
+            MoveTheseus(direction);
+        }
     }
 
     private void MoveTheseus(Vector2Int direction)
     {
         Vector2Int newPos = theseusPos + direction;
 
+        //Check bounds.
         if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
             return;
 
+        //Check if the cell allows move in that direction.
+        Cell currentCell = grid[theseusPos.x, theseusPos.y];
+        if (direction == Vector2Int.up && currentCell.wallUp) return;
+        if (direction == Vector2Int.down && currentCell.wallDown) return;
+        if (direction == Vector2Int.left && currentCell.wallLeft) return;
+        if (direction == Vector2Int.right && currentCell.wallRight) return;
+
+        //Check if the cell allows entry from this direction.
         if (!grid[newPos.x, newPos.y].CanMoveTo(theseusPos.x, theseusPos.y))
             return;
 
         theseusPos = newPos;
 
         UpdatePlayersPositions();
+        
+        //Move Minotaur twice.
+        MoveMinotaur();
+        MoveMinotaur();
+    }
+
+    private void MoveMinotaur()
+    {
+        Vector2Int direction;
+
+        int horizontalMovement = theseusPos.x - minotaurPos.x;
+        int verticalMovement = theseusPos.y - minotaurPos.y;
+
+        //Horizontal movement first.
+        if (horizontalMovement != 0)
+        {
+            direction = horizontalMovement > 0 ? Vector2Int.right : Vector2Int.left;
+            if (CanMoveMinotaur(direction))
+            {
+                minotaurPos += direction;
+                UpdatePlayersPositions();
+                return;
+            }
+        }
+
+        //Try vertical if horizontal failed.
+        if (verticalMovement != 0)
+        {
+            direction = verticalMovement > 0 ? Vector2Int.up : Vector2Int.down;
+            if (CanMoveMinotaur(direction))
+            {
+                minotaurPos += direction;
+                UpdatePlayersPositions();
+            }
+        }
+    }
+
+    private bool CanMoveMinotaur(Vector2Int direction)
+    {
+        Vector2Int newPos = minotaurPos + direction;
+
+        if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
+            return false;
+
+        Cell currentCell = grid[minotaurPos.x, minotaurPos.y];
+        if (direction == Vector2Int.up && currentCell.wallUp) return false;
+        if (direction == Vector2Int.down && currentCell.wallDown) return false;
+        if (direction == Vector2Int.left && currentCell.wallLeft) return false;
+        if (direction == Vector2Int.right && currentCell.wallRight) return false;
+
+        return grid[newPos.x, newPos.y].CanMoveTo(minotaurPos.x, minotaurPos.y);
     }
 
     private void CenterCamera()
@@ -143,6 +209,9 @@ public class GridManager : MonoBehaviour
         grid[4, 3].wallUp = true;
         grid[4, 4].wallDown = true;
 
+        theseusPos = new Vector2Int(0, 0);
+        minotaurPos = new Vector2Int(4, 4);
+
         exitPos = new Vector2Int(7, 5);
         grid[exitPos.x, exitPos.y].hasExit = true;
 
@@ -153,7 +222,6 @@ public class GridManager : MonoBehaviour
             cell.UpdateVisuals();
         }
     }
-
 
     private void UpdatePlayersPositions()
     {
