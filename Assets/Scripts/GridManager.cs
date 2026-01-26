@@ -12,16 +12,26 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject theseusPrefab;
     [SerializeField] private GameObject minotaurPrefab;
 
-    private GameObject theseus;
-    private GameObject minotaur;
+    private Theseus theseus;
+    private Minotaur minotaur;
 
     private Cell[,] grid;
     private Vector2Int exitPos;
     private Vector2Int theseusPos;
     private Vector2Int minotaurPos;
 
-    [Header("Movement")] [SerializeField] private float moveDuration = 0.3f;
     private bool isAnimating;
+    private bool isProcessingTurn;
+
+    private void OnEnable()
+    {
+        GameEvents.OnTheseusMoved += TheseusMoved;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnTheseusMoved -= TheseusMoved;
+    }
 
     private void Start()
     {
@@ -35,11 +45,39 @@ public class GridManager : MonoBehaviour
         SetupGrid();
         SetupCharacters();
     }
-    
+
+    private void Update()
+    {
+        if (theseus != null)
+        {
+            theseus.HandleInput();
+        }
+    }
+
+    private IEnumerator ProcessTurn()
+    {
+        isProcessingTurn = true;
+
+        yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
+        yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
+
+        isProcessingTurn = false;
+    }
+
+
+    private void TheseusMoved()
+    {
+        if (isProcessingTurn) return;
+        StartCoroutine(ProcessTurn());
+    }
+
+
     private void CenterCamera()
     {
         Camera.main.transform.position = new Vector3(
             (width - 1) * cellSize / 2f, (height - 1) * cellSize / 2f, -10);
+
+        Camera.main.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
     }
 
     private void CreateGrid()
@@ -91,13 +129,8 @@ public class GridManager : MonoBehaviour
         grid[4, 3].wallUp = true;
         grid[4, 4].wallDown = true;
 
-        theseusPos = new Vector2Int(0, 0);
-        minotaurPos = new Vector2Int(4, 4);
-
         exitPos = new Vector2Int(7, 5);
         grid[exitPos.x, exitPos.y].hasExit = true;
-
-        //update walls;
 
         foreach (Cell cell in grid)
         {
@@ -107,158 +140,37 @@ public class GridManager : MonoBehaviour
 
     private void SetupCharacters()
     {
-        theseus = Instantiate(theseusPrefab);
+        GameObject theseusObject = Instantiate(theseusPrefab);
+        theseus = theseusObject.GetComponent<Theseus>();
         theseus.name = "Theseus";
+        theseus.Initialize(this, new Vector2Int(0, 0));
 
-        minotaur = Instantiate(minotaurPrefab);
+        GameObject minotaurObject = Instantiate(minotaurPrefab);
+        minotaur = minotaurObject.GetComponent<Minotaur>();
         minotaur.name = "Minotaur";
-
-        UpdatePlayersPositions();
+        minotaur.Initialize(this, new Vector2Int(4, 4));
     }
 
-    private void Update()
+
+    public Vector3 GridToWorldPos(Vector2Int gridPos)
     {
-        HandleInput();
+        return new Vector3(gridPos.x * cellSize, gridPos.y * cellSize, 0);
     }
 
-    private void HandleInput()
+    public bool IsValidMove(Vector2Int from, Vector2Int to)
     {
-        if (isAnimating) return;
-        Vector2Int direction = Vector2Int.zero;
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            direction = Vector2Int.up;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            direction = Vector2Int.down;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            direction = Vector2Int.right;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            direction = Vector2Int.left;
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            //Wait.
-        }
-
-        if (direction != Vector2Int.zero)
-        {
-            StartCoroutine(HandlePlayerMove(direction));
-        }
-    }
-
-    private IEnumerator HandlePlayerMove(Vector2Int direction)
-    {
-        Vector2Int newPos = theseusPos + direction;
-
-        //Check bounds.
-        if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
-            yield break;
-
-        //Check if the cell allows move in that direction.
-        Cell currentCell = grid[theseusPos.x, theseusPos.y];
-        if (direction == Vector2Int.up && currentCell.wallUp) yield break;
-        if (direction == Vector2Int.down && currentCell.wallDown) yield break;
-        if (direction == Vector2Int.left && currentCell.wallLeft) yield break;
-        if (direction == Vector2Int.right && currentCell.wallRight) yield break;
-
-        //Check if the cell allows entry from this direction.
-        if (!grid[newPos.x, newPos.y].CanMoveTo(theseusPos.x, theseusPos.y))
-            yield break;
-
-        isAnimating = true;
-
-        //Move Theseus with animation.
-        Vector3 targetPos = new Vector3(newPos.x * cellSize, newPos.y * cellSize, 0);
-        yield return StartCoroutine(AnimateMovement(theseus, targetPos));
-        theseusPos = newPos;
-
-        //Move Minotaur animated twice.
-        yield return StartCoroutine(MoveMinotaurAnimated());
-        yield return StartCoroutine(MoveMinotaurAnimated());
-
-        isAnimating = false;
-    }
-
-    private IEnumerator MoveMinotaurAnimated()
-    {
-        Vector2Int direction;
-
-        int horizontalMovement = theseusPos.x - minotaurPos.x;
-        int verticalMovement = theseusPos.y - minotaurPos.y;
-        bool moved = false;
-        //Horizontal movement first.
-        if (horizontalMovement != 0)
-        {
-            direction = horizontalMovement > 0 ? Vector2Int.right : Vector2Int.left;
-            if (CanMoveMinotaur(direction))
-            {
-                Vector2Int newPos = minotaurPos + direction;
-                Vector3 targetPos = new Vector3(newPos.x * cellSize, newPos.y * cellSize, 0);
-                yield return StartCoroutine(AnimateMovement(minotaur, targetPos));
-                minotaurPos = newPos;
-                moved = true;
-            }
-        }
-
-        //Try vertical if horizontal failed.
-        if (!moved && verticalMovement != 0)
-        {
-            direction = verticalMovement > 0 ? Vector2Int.up : Vector2Int.down;
-            if (CanMoveMinotaur(direction))
-            {
-                Vector2Int newPos = minotaurPos + direction;
-                Vector3 targetPos = new Vector3(newPos.x * cellSize, newPos.y * cellSize, 0);
-                yield return StartCoroutine(AnimateMovement(minotaur, targetPos));
-                minotaurPos = newPos;
-            }
-        }
-    }
-
-    private bool CanMoveMinotaur(Vector2Int direction)
-    {
-        Vector2Int newPos = minotaurPos + direction;
-
-        if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
+        if (to.x < 0 || to.x >= width || to.y < 0 || to.y >= height)
             return false;
 
-        Cell currentCell = grid[minotaurPos.x, minotaurPos.y];
+        //Get Direction.
+        Vector2Int direction = to - from;
+
+        Cell currentCell = grid[from.x, from.y];
         if (direction == Vector2Int.up && currentCell.wallUp) return false;
         if (direction == Vector2Int.down && currentCell.wallDown) return false;
         if (direction == Vector2Int.left && currentCell.wallLeft) return false;
         if (direction == Vector2Int.right && currentCell.wallRight) return false;
 
-        return grid[newPos.x, newPos.y].CanMoveTo(minotaurPos.x, minotaurPos.y);
-    }
-
-    private void UpdatePlayersPositions()
-    {
-        theseus.transform.position = new Vector3(theseusPos.x * cellSize, theseusPos.y * cellSize, 0);
-        minotaur.transform.position = new Vector3(minotaurPos.x * cellSize, minotaurPos.y * cellSize, 0);
-    }
-
-    private IEnumerator AnimateMovement(GameObject player, Vector3 targetPos)
-    {
-        Vector3 start = player.transform.position;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < moveDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / moveDuration;
-
-            //interpolate.
-            t = t * t * (3f - 2f * t);
-            player.transform.position = Vector3.Lerp(start, targetPos, t);
-            yield return null;
-        }
-
-        player.transform.position = targetPos;
+        return grid[to.x, to.y].CanMoveTo(from.x, from.y);
     }
 }
