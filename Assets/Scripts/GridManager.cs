@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Header("Grid Settings")] 
-    public int width = 8;
+    [Header("Grid Settings")] public int width = 8;
     public int height = 6;
     public float cellSize = 1f;
 
-    [Header("Prefabs")] public GameObject cellPrefab;
+    [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
+    [SerializeField] private GameObject theseusPrefab;
+    [SerializeField] private GameObject minotaurPrefab;
+
+    private GameObject theseus;
+    private GameObject minotaur;
+
     private Cell[,] grid;
     private Vector2Int exitPos;
+    private Vector2Int theseusPos;
+    private Vector2Int minotaurPos;
 
     private void Start()
     {
@@ -22,6 +29,63 @@ public class GridManager : MonoBehaviour
 
         CreateGrid();
         SetupGrid();
+        SetupCharacters();
+    }
+
+    private void SetupCharacters()
+    {
+        theseus = Instantiate(theseusPrefab);
+        theseus.name = "theseus";
+
+        minotaur = Instantiate(minotaurPrefab);
+        minotaur.name = "minotaur";
+    }
+
+    private void Update()
+    {
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        Vector2Int direction = Vector2Int.zero;
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            direction = Vector2Int.up;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            direction = Vector2Int.down;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            direction = Vector2Int.right;
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            direction = Vector2Int.left;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            //Wait.
+        }
+
+        MoveTheseus(direction);
+    }
+
+    private void MoveTheseus(Vector2Int direction)
+    {
+        Vector2Int newPos = theseusPos + direction;
+
+        if (newPos.x < 0 || newPos.x >= width || newPos.y < 0 || newPos.y >= height)
+            return;
+
+        if (!grid[newPos.x, newPos.y].CanMoveTo(theseusPos.x, theseusPos.y))
+            return;
+
+        theseusPos = newPos;
+
+        UpdatePlayersPositions();
     }
 
     private void CenterCamera()
@@ -53,6 +117,7 @@ public class GridManager : MonoBehaviour
                 grid[x, y] = cell;
             }
         }
+
         CenterCamera();
     }
 
@@ -87,5 +152,12 @@ public class GridManager : MonoBehaviour
         {
             cell.UpdateVisuals();
         }
+    }
+
+
+    private void UpdatePlayersPositions()
+    {
+        theseus.transform.position = new Vector3(theseusPos.x * cellSize, theseusPos.y * cellSize, 0);
+        minotaur.transform.position = new Vector3(minotaurPos.x * cellSize, minotaurPos.y * cellSize, 0);
     }
 }

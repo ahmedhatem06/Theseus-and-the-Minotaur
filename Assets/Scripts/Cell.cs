@@ -139,4 +139,15 @@ public class Cell : MonoBehaviour
             wall = null;
         }
     }
+
+    public bool CanMoveTo(int fromX, int fromY)
+    {
+        //Check which direction we're coming from and make sure there are no walls blocking it.
+
+        if (fromX < xPos && wallLeft) return false;
+        if (fromX > xPos && wallRight) return false;
+        if (fromY < yPos && wallDown) return false;
+        if (fromY > yPos && wallUp) return false;
+        return true;
+    }
 }
