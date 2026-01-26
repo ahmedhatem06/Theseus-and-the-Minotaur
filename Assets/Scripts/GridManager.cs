@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Header("Grid Settings")] public int width = 8;
-    public int height = 6;
-    public float cellSize = 1f;
-
-    [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
+    [Header("Level Data")]
+    [SerializeField] private LevelData currentLevel;
+    
+    [Header("Prefabs")] 
+    [SerializeField] private GameObject cellPrefab;
     [SerializeField] private PlayerSpawner playerSpawner;
 
     private Theseus theseus;
@@ -15,6 +15,11 @@ public class GridManager : MonoBehaviour
 
     private Cell[,] grid;
     private Vector2Int exitPos;
+    
+    // Grid dimensions from level data
+    private int width;
+    private int height;
+    private float cellSize = 1f;
 
     private bool isAnimating;
     private bool isProcessingTurn;
@@ -35,6 +40,7 @@ public class GridManager : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnTheseusMoved -= TheseusMoved;
+        GameEvents.OnTheseusWaited -= TheseusWaited;
     }
 
     private void Start()
@@ -50,10 +56,14 @@ public class GridManager : MonoBehaviour
             Debug.LogError("Missing player spawner");
             return;
         }
+        
+        if (currentLevel == null)
+        {
+            Debug.LogError("No level data assigned!");
+            return;
+        }
 
-        CreateGrid();
-        SetupGrid();
-        SetupCharacters();
+        LoadLevel(currentLevel);
     }
 
     private void Update()
@@ -76,18 +86,82 @@ public class GridManager : MonoBehaviour
         isProcessingTurn = false;
     }
 
-
     private void TheseusMoved()
     {
         if (isProcessingTurn) return;
         StartCoroutine(ProcessTurn());
     }
 
+    /// <summary>
+    /// Load a level from LevelData ScriptableObject
+    /// </summary>
+    public void LoadLevel(LevelData levelData)
+    {
+        if (levelData == null)
+        {
+            Debug.LogError("Cannot load null level data!");
+            return;
+        }
+
+        // Clear existing level if any
+        ClearLevel();
+
+        // Store reference and get dimensions
+        currentLevel = levelData;
+        width = levelData.width;
+        height = levelData.height;
+        exitPos = levelData.exitPosition;
+
+        Debug.Log($"Loading level: {levelData.levelName} (Level {levelData.levelNumber})");
+
+        // Create and setup grid
+        CreateGrid();
+        LoadGridFromLevelData(levelData);
+        
+        // Setup characters
+        SetupCharacters(levelData);
+        
+        // Reset game state
+        gameOver = false;
+        isProcessingTurn = false;
+    }
+
+    /// <summary>
+    /// Clear the current level
+    /// </summary>
+    private void ClearLevel()
+    {
+        if (grid != null)
+        {
+            foreach (Cell cell in grid)
+            {
+                if (cell != null)
+                {
+                    Destroy(cell.gameObject);
+                }
+            }
+            grid = null;
+        }
+
+        if (theseus != null)
+        {
+            Destroy(theseus.gameObject);
+            theseus = null;
+        }
+
+        if (minotaur != null)
+        {
+            Destroy(minotaur.gameObject);
+            minotaur = null;
+        }
+    }
 
     private void CenterCamera()
     {
         Camera.main.transform.position = new Vector3(
-            (width - 1) * cellSize / 2f, (height - 1) * cellSize / 2f, -10);
+            (width - 1) * cellSize / 2f, 
+            (height - 1) * cellSize / 2f, 
+            -10);
 
         Camera.main.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
     }
@@ -107,7 +181,7 @@ public class GridManager : MonoBehaviour
                 Cell cell = cellObject.GetComponent<Cell>();
                 if (cell == null)
                 {
-                    Debug.LogError($"Cell_{x}_{y} not found");
+                    Debug.LogError($"Cell_{x}_{y} does not have a Cell component!");
                     return;
                 }
 
@@ -119,46 +193,53 @@ public class GridManager : MonoBehaviour
         CenterCamera();
     }
 
-    private void SetupGrid()
+    /// <summary>
+    /// Load grid walls and exit from LevelData
+    /// </summary>
+    private void LoadGridFromLevelData(LevelData levelData)
     {
+        if (levelData.cells == null || levelData.cells.Length != width * height)
+        {
+            Debug.LogError("Level data cells array is invalid!");
+            return;
+        }
+
+        // Copy wall data from LevelData to grid cells
         for (int x = 0; x < width; x++)
         {
-            grid[x, 0].wallDown = true;
-            grid[x, height - 1].wallUp = true;
+            for (int y = 0; y < height; y++)
+            {
+                CellData cellData = levelData.GetCellData(x, y);
+                if (cellData != null)
+                {
+                    Cell cell = grid[x, y];
+                    cellData.CopyTo(cell);
+                }
+            }
         }
 
-        for (int y = 0; y < height; y++)
-        {
-            grid[0, y].wallLeft = true;
-            grid[width - 1, y].wallRight = true;
-        }
-
-        //walls;
-
-        grid[2, 2].wallRight = true;
-        grid[3, 2].wallLeft = true;
-
-        grid[4, 3].wallUp = true;
-        grid[4, 4].wallDown = true;
-
-        exitPos = new Vector2Int(1, 1);
-        grid[exitPos.x, exitPos.y].hasExit = true;
-
+        // Update all cell visuals
         foreach (Cell cell in grid)
         {
             cell.UpdateVisuals();
         }
+        
+        Debug.Log($"Grid loaded with {width}x{height} cells");
     }
 
-    private void SetupCharacters()
+    /// <summary>
+    /// Setup characters at their starting positions from LevelData
+    /// </summary>
+    private void SetupCharacters(LevelData levelData)
     {
-        Vector2Int theseusStartPos = new Vector2Int(0, 0);
-        Vector2Int minotaurStartPos = new Vector2Int(4, 4);
+        Vector2Int theseusStartPos = levelData.theseusStartPosition;
+        Vector2Int minotaurStartPos = levelData.minotaurStartPosition;
 
         theseus = playerSpawner.SpawnTheseus(this, theseusStartPos);
         minotaur = playerSpawner.SpawnMinotaur(this, minotaurStartPos);
+        
+        Debug.Log($"Theseus spawned at {theseusStartPos}, Minotaur at {minotaurStartPos}, Exit at {exitPos}");
     }
-
 
     public Vector3 GridToWorldPos(Vector2Int gridPos)
     {
@@ -170,7 +251,7 @@ public class GridManager : MonoBehaviour
         if (to.x < 0 || to.x >= width || to.y < 0 || to.y >= height)
             return false;
 
-        //Get Direction.
+        // Get Direction
         Vector2Int direction = to - from;
 
         Cell currentCell = grid[from.x, from.y];
@@ -196,5 +277,13 @@ public class GridManager : MonoBehaviour
             GameEvents.GameWon();
             Debug.Log("Game Over | Won");
         }
+    }
+    
+    /// <summary>
+    /// Public method to switch to a different level during gameplay
+    /// </summary>
+    public void SwitchLevel(LevelData newLevel)
+    {
+        LoadLevel(newLevel);
     }
 }
