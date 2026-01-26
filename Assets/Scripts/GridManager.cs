@@ -23,6 +23,13 @@ public class GridManager : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnTheseusMoved += TheseusMoved;
+        GameEvents.OnTheseusWaited += TheseusWaited;
+    }
+
+    private void TheseusWaited()
+    {
+        if (isProcessingTurn) return;
+        StartCoroutine(ProcessTurn());
     }
 
     private void OnDisable()

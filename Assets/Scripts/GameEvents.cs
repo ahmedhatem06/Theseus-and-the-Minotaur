@@ -3,8 +3,10 @@ using System;
 public static class GameEvents
 {
     public static event Action OnTheseusMoved;
+    public static event Action OnTheseusWaited;
     public static event Action OnGameWon;
     public static event Action OnGameLost;
+    public static event Action OnGameRestart;
 
     public static void TheseusMoved()
     {
@@ -19,5 +21,15 @@ public static class GameEvents
     public static void GameLost()
     {
         OnGameLost?.Invoke();
+    }
+
+    public static void TheseusWaited()
+    {
+        OnTheseusWaited?.Invoke();
+    }
+
+    public static void GameRestart()
+    {
+        OnGameRestart?.Invoke();
     }
 }

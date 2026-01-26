@@ -25,7 +25,7 @@ public class Theseus : Player
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            //Wait.
+            GameEvents.TheseusWaited();
         }
 
         if (direction != Vector2Int.zero)
