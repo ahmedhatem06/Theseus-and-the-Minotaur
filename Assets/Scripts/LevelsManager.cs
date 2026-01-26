@@ -65,6 +65,8 @@ public class LevelsManager : MonoBehaviour
         Debug.Log($"Loading level {levelData.name}");
 
         gridManager.LoadLevel(levelData);
+        
+        GameEvents.LevelLoaded(currentLevelIndex);
     }
 
     /// <summary>
