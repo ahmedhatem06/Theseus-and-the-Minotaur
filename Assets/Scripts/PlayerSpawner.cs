@@ -8,9 +8,6 @@ public class PlayerSpawner : MonoBehaviour
     private Theseus theseus;
     private Minotaur minotaur;
 
-    public Theseus GetTheseus() => theseus;
-    public Minotaur GetMinotaur() => minotaur;
-
     public Theseus SpawnTheseus(GridManager gridManager, Vector2Int startPos)
     {
         if (theseus != null)

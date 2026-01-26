@@ -19,6 +19,7 @@ public class GridManager : MonoBehaviour
 
     private bool isAnimating;
     private bool isProcessingTurn;
+    private bool gameOver;
 
     private void OnEnable()
     {
@@ -58,7 +59,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        if (theseus != null && !isProcessingTurn)
+        if (theseus != null && !isProcessingTurn && !gameOver)
         {
             theseus.HandleInput();
         }
@@ -70,6 +71,8 @@ public class GridManager : MonoBehaviour
 
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
+
+        CheckGameState();
 
         isProcessingTurn = false;
     }
@@ -139,7 +142,7 @@ public class GridManager : MonoBehaviour
         grid[4, 3].wallUp = true;
         grid[4, 4].wallDown = true;
 
-        exitPos = new Vector2Int(7, 5);
+        exitPos = new Vector2Int(1, 1);
         grid[exitPos.x, exitPos.y].hasExit = true;
 
         foreach (Cell cell in grid)
@@ -178,5 +181,21 @@ public class GridManager : MonoBehaviour
         if (direction == Vector2Int.right && currentCell.wallRight) return false;
 
         return grid[to.x, to.y].CanMoveTo(from.x, from.y);
+    }
+
+    private void CheckGameState()
+    {
+        if (theseus.GridPos == minotaur.GridPos)
+        {
+            gameOver = true;
+            GameEvents.GameLost();
+            Debug.Log("Game Over | Lost");
+        }
+        else if (theseus.GridPos == exitPos)
+        {
+            gameOver = true;
+            GameEvents.GameWon();
+            Debug.Log("Game Over | Won");
+        }
     }
 }

@@ -36,14 +36,4 @@ public class Theseus : Player
             }
         }
     }
-
-    private void Lost()
-    {
-        GameEvents.GameLost();
-    }
-
-    private void Won()
-    {
-        GameEvents.GameWon();
-    }
 }

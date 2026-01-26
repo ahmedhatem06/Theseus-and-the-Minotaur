@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d27baff793c054834a40064c7bdf9ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 10
-  height: 10
+  width: 8
+  height: 6
   cellSize: 1
   cellPrefab: {fileID: 3733982407107112395, guid: f6933876de37b45df8e2f0678e870b0b, type: 3}
-  theseusPrefab: {fileID: 5808298296581193308, guid: 1a693ded1cccd438c90a400ec8f029bb, type: 3}
-  minotaurPrefab: {fileID: 8893925035058263926, guid: 8ad251ffcdd224fb190d52cd38846176, type: 3}
+  playerSpawner: {fileID: 0}
