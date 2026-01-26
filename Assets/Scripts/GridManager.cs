@@ -3,11 +3,7 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Header("Level Data")]
-    [SerializeField] private LevelData currentLevel;
-    
-    [Header("Prefabs")] 
-    [SerializeField] private GameObject cellPrefab;
+    [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
     [SerializeField] private PlayerSpawner playerSpawner;
 
     private Theseus theseus;
@@ -15,7 +11,7 @@ public class GridManager : MonoBehaviour
 
     private Cell[,] grid;
     private Vector2Int exitPos;
-    
+
     // Grid dimensions from level data
     private int width;
     private int height;
@@ -31,39 +27,16 @@ public class GridManager : MonoBehaviour
         GameEvents.OnTheseusWaited += TheseusWaited;
     }
 
-    private void TheseusWaited()
-    {
-        if (isProcessingTurn) return;
-        StartCoroutine(ProcessTurn());
-    }
-
     private void OnDisable()
     {
         GameEvents.OnTheseusMoved -= TheseusMoved;
         GameEvents.OnTheseusWaited -= TheseusWaited;
     }
 
-    private void Start()
+    private void TheseusWaited()
     {
-        if (cellPrefab == null)
-        {
-            Debug.LogError("Missing cell prefab");
-            return;
-        }
-
-        if (playerSpawner == null)
-        {
-            Debug.LogError("Missing player spawner");
-            return;
-        }
-        
-        if (currentLevel == null)
-        {
-            Debug.LogError("No level data assigned!");
-            return;
-        }
-
-        LoadLevel(currentLevel);
+        if (isProcessingTurn) return;
+        StartCoroutine(ProcessTurn());
     }
 
     private void Update()
@@ -106,21 +79,18 @@ public class GridManager : MonoBehaviour
         // Clear existing level if any
         ClearLevel();
 
-        // Store reference and get dimensions
-        currentLevel = levelData;
+        // Get dimensions
         width = levelData.width;
         height = levelData.height;
         exitPos = levelData.exitPosition;
 
-        Debug.Log($"Loading level: {levelData.levelName} (Level {levelData.levelNumber})");
-
         // Create and setup grid
         CreateGrid();
         LoadGridFromLevelData(levelData);
-        
+
         // Setup characters
         SetupCharacters(levelData);
-        
+
         // Reset game state
         gameOver = false;
         isProcessingTurn = false;
@@ -140,6 +110,7 @@ public class GridManager : MonoBehaviour
                     Destroy(cell.gameObject);
                 }
             }
+
             grid = null;
         }
 
@@ -159,8 +130,8 @@ public class GridManager : MonoBehaviour
     private void CenterCamera()
     {
         Camera.main.transform.position = new Vector3(
-            (width - 1) * cellSize / 2f, 
-            (height - 1) * cellSize / 2f, 
+            (width - 1) * cellSize / 2f,
+            (height - 1) * cellSize / 2f,
             -10);
 
         Camera.main.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
@@ -223,7 +194,7 @@ public class GridManager : MonoBehaviour
         {
             cell.UpdateVisuals();
         }
-        
+
         Debug.Log($"Grid loaded with {width}x{height} cells");
     }
 
@@ -237,7 +208,7 @@ public class GridManager : MonoBehaviour
 
         theseus = playerSpawner.SpawnTheseus(this, theseusStartPos);
         minotaur = playerSpawner.SpawnMinotaur(this, minotaurStartPos);
-        
+
         Debug.Log($"Theseus spawned at {theseusStartPos}, Minotaur at {minotaurStartPos}, Exit at {exitPos}");
     }
 
@@ -277,13 +248,5 @@ public class GridManager : MonoBehaviour
             GameEvents.GameWon();
             Debug.Log("Game Over | Won");
         }
-    }
-    
-    /// <summary>
-    /// Public method to switch to a different level during gameplay
-    /// </summary>
-    public void SwitchLevel(LevelData newLevel)
-    {
-        LoadLevel(newLevel);
     }
 }

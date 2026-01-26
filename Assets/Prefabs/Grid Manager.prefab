@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d27baff793c054834a40064c7bdf9ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: {fileID: 11400000, guid: 806fcec70945945d6a2d82b5be3b0d7f, type: 2}
+  levels:
+  - {fileID: 11400000, guid: f4bc69ebfeb46475180ecd4bbe94adb6, type: 2}
+  - {fileID: 11400000, guid: 9dc20012ff3954cb884b6f2d0b8070ed, type: 2}
+  currentLevelIndex: 0
   cellPrefab: {fileID: 3733982407107112395, guid: f6933876de37b45df8e2f0678e870b0b, type: 3}
   playerSpawner: {fileID: 0}
