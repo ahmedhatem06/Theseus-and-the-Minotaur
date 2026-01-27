@@ -6,7 +6,7 @@ public static class GameEvents
     public static event Action OnTheseusWaited;
     public static event Action OnGameWon;
     public static event Action OnGameLost;
-    public static event Action OnGameRestart;
+    public static event Action OnGameStarted;
     public static event Action<int> OnLevelLoaded;
 
     public static void TheseusMoved()
@@ -29,13 +29,13 @@ public static class GameEvents
         OnTheseusWaited?.Invoke();
     }
 
-    public static void GameRestart()
-    {
-        OnGameRestart?.Invoke();
-    }
-
     public static void LevelLoaded(int level)
     {
         OnLevelLoaded?.Invoke(level);
+    }
+    
+    public static void GameStarted()
+    {
+        OnGameStarted?.Invoke();
     }
 }

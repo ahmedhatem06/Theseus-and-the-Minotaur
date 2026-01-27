@@ -21,15 +21,10 @@ public class LevelsManager : MonoBehaviour
     {
         GameEvents.OnGameWon += OnGameWon;
         GameEvents.OnGameLost += OnGameLost;
+        GameEvents.OnGameStarted += OnGameStarted;
     }
 
-    private void OnDisable()
-    {
-        GameEvents.OnGameWon -= OnGameWon;
-        GameEvents.OnGameLost -= OnGameLost;
-    }
-
-    private void Start()
+    private void OnGameStarted()
     {
         if (levels == null || levels.Length == 0)
         {
@@ -46,6 +41,13 @@ public class LevelsManager : MonoBehaviour
         LoadCurrentLevel();
     }
 
+    private void OnDisable()
+    {
+        GameEvents.OnGameWon -= OnGameWon;
+        GameEvents.OnGameLost -= OnGameLost;
+        GameEvents.OnGameStarted -= OnGameStarted;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -59,7 +61,7 @@ public class LevelsManager : MonoBehaviour
             Debug.Log("Loading next level " + currentLevelIndex);
             LoadNextLevel();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Loading previous level " + currentLevelIndex);
