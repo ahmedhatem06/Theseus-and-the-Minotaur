@@ -62,4 +62,19 @@ public class Player : MonoBehaviour
         UpdateWorldPosition();
         return true;
     }
+
+    private void SetPosition(Vector2Int newPos, bool animated = true)
+    {
+        gridPos = newPos;
+        UpdateWorldPosition(animated);
+    }
+
+    public IEnumerator SetPositionCoroutine(Vector2Int newPos)
+    {
+        SetPosition(newPos);
+        while (isMoving)
+        {
+            yield return null;
+        }
+    }
 }

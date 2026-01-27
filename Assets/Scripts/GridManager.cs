@@ -5,6 +5,7 @@ public class GridManager : MonoBehaviour
 {
     [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
     [SerializeField] private PlayerSpawner playerSpawner;
+    [SerializeField] private TurnHistory turnHistory;
 
     private Theseus theseus;
     private Minotaur minotaur;
@@ -25,18 +26,48 @@ public class GridManager : MonoBehaviour
     {
         GameEvents.OnTheseusMoved += TheseusMoved;
         GameEvents.OnTheseusWaited += TheseusWaited;
+        GameEvents.OnUndoRequested += UndoRequested;
     }
 
     private void OnDisable()
     {
         GameEvents.OnTheseusMoved -= TheseusMoved;
         GameEvents.OnTheseusWaited -= TheseusWaited;
+        GameEvents.OnUndoRequested -= UndoRequested;
     }
+
+    private void UndoRequested()
+    {
+        StartCoroutine(PerformUndo());
+    }
+
+    //Animated Undo.
+    private IEnumerator PerformUndo()
+    {
+        isProcessingTurn = true;
+        TurnHistory.Turn lastTurn = turnHistory.GetLastTurn();
+
+        if (lastTurn == null)
+        {
+            isProcessingTurn = false;
+            yield break;
+        }
+
+        //Move theseus back.
+        yield return StartCoroutine(theseus.SetPositionCoroutine(lastTurn.theseusFromPos));
+
+        //Move Minotaur back twice.
+        yield return StartCoroutine(minotaur.SetPositionCoroutine(lastTurn.minotaurAfterMove1));
+        yield return StartCoroutine(minotaur.SetPositionCoroutine(lastTurn.minotaurFromPos));
+
+        isProcessingTurn = false;
+    }
+
 
     private void TheseusWaited()
     {
         if (isProcessingTurn) return;
-        StartCoroutine(ProcessTurn());
+        StartCoroutine(ProcessTurn(true));
     }
 
     private void Update()
@@ -47,12 +78,28 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ProcessTurn()
+    private IEnumerator ProcessTurn(bool isWait = false)
     {
         isProcessingTurn = true;
 
+        //Store Positions.
+        Vector2Int theseusStartPos = theseus.GetPositionBeforeMove();
+        Vector2Int minotaurStartPos = minotaur.GridPos;
+
+        //Minotaur moves twice..
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
+        Vector2Int minotaurAfterMove1 = minotaur.GridPos;
+
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
+        Vector2Int minotaurAfterMove2 = minotaur.GridPos;
+
+        turnHistory.RecordTurn(
+            theseusStartPos,
+            theseus.GridPos,
+            minotaurStartPos,
+            minotaurAfterMove1,
+            minotaurAfterMove2,
+            isWait);
 
         CheckGameState();
 
@@ -62,7 +109,7 @@ public class GridManager : MonoBehaviour
     private void TheseusMoved()
     {
         if (isProcessingTurn) return;
-        StartCoroutine(ProcessTurn());
+        StartCoroutine(ProcessTurn(false));
     }
 
     /// <summary>
@@ -94,6 +141,8 @@ public class GridManager : MonoBehaviour
         // Reset game state
         gameOver = false;
         isProcessingTurn = false;
+        
+        turnHistory.Clear();
     }
 
     /// <summary>

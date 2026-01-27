@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class Theseus : Player
 {
+    private Vector2Int positionBeforeMove;
+    public Vector2Int GetPositionBeforeMove() => positionBeforeMove;
+
     public void HandleInput()
     {
         if (isMoving) return;
+
+        //Store position before attempting to move.
+        positionBeforeMove = gridPos;
+
         Vector2Int direction = Vector2Int.zero;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -26,6 +33,12 @@ public class Theseus : Player
         else if (Input.GetKeyDown(KeyCode.W))
         {
             GameEvents.TheseusWaited();
+            return;
+        }
+        else if (Input.GetKeyDown(KeyCode.U))
+        {
+            GameEvents.UndoRequested();
+            return;
         }
 
         if (direction != Vector2Int.zero)
