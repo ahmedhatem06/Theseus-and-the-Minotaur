@@ -46,6 +46,27 @@ public class LevelsManager : MonoBehaviour
         LoadCurrentLevel();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Restarting level " + currentLevelIndex);
+            RestartCurrentLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            Debug.Log("Loading next level " + currentLevelIndex);
+            LoadNextLevel();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log("Loading previous level " + currentLevelIndex);
+            LoadPreviousLevel();
+        }
+    }
+
     private void LoadCurrentLevel()
     {
         if (currentLevelIndex < 0 || currentLevelIndex >= levels.Length)
@@ -65,7 +86,7 @@ public class LevelsManager : MonoBehaviour
         Debug.Log($"Loading level {levelData.name}");
 
         gridManager.LoadLevel(levelData);
-        
+
         GameEvents.LevelLoaded(currentLevelIndex);
     }
 
@@ -116,5 +137,36 @@ public class LevelsManager : MonoBehaviour
     {
         Debug.Log($"Game Over! Restarting level {currentLevelIndex + 1}");
         StartCoroutine(RestartLevelWithDelay());
+    }
+
+    private void LoadPreviousLevel()
+    {
+        if (currentLevelIndex > 0)
+        {
+            currentLevelIndex--;
+            LoadCurrentLevel();
+        }
+        else
+        {
+            Debug.Log("Already at the first level!");
+        }
+    }
+
+    private void LoadNextLevel()
+    {
+        if (currentLevelIndex < levels.Length - 1)
+        {
+            currentLevelIndex++;
+            LoadCurrentLevel();
+        }
+        else
+        {
+            Debug.Log("Already at the last level!");
+        }
+    }
+
+    private void RestartCurrentLevel()
+    {
+        LoadCurrentLevel();
     }
 }
