@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 5
   levelNumber: 5
-  width: 4
+  width: 5
   height: 4
   _theseusStartPosition: {x: 1, y: 2}
   _minotaurStartPosition: {x: 1, y: 3}
-  _exitPosition: {x: 3, y: 2}
+  _exitPosition: {x: 4, y: 2}
   cells:
   - wallUp: 1
     wallDown: 1
@@ -37,6 +37,11 @@ MonoBehaviour:
     hasExit: 0
   - wallUp: 0
     wallDown: 1
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
     wallLeft: 1
     wallRight: 1
     hasExit: 0
@@ -48,6 +53,11 @@ MonoBehaviour:
   - wallUp: 0
     wallDown: 0
     wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
     wallRight: 0
     hasExit: 0
   - wallUp: 0
@@ -75,7 +85,12 @@ MonoBehaviour:
     wallLeft: 0
     wallRight: 0
     hasExit: 0
-  - wallUp: 1
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
     wallDown: 0
     wallLeft: 0
     wallRight: 1
@@ -97,6 +112,11 @@ MonoBehaviour:
     hasExit: 0
   - wallUp: 1
     wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 1
     wallLeft: 1
     wallRight: 1
     hasExit: 0
