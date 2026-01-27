@@ -23,6 +23,15 @@ public class LevelsManager : MonoBehaviour
         GameEvents.OnGameLost += OnGameLost;
         GameEvents.OnGameStarted += OnGameStarted;
     }
+    
+    public LevelData GetCurrentLevelData()
+    {
+        if (currentLevelIndex >= 0 && currentLevelIndex < levels.Length)
+        {
+            return levels[currentLevelIndex];
+        }
+        return null;
+    }
 
     private void OnGameStarted()
     {

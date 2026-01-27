@@ -47,6 +47,9 @@ MonoBehaviour:
   levels:
   - {fileID: 11400000, guid: f4bc69ebfeb46475180ecd4bbe94adb6, type: 2}
   - {fileID: 11400000, guid: 9dc20012ff3954cb884b6f2d0b8070ed, type: 2}
-  currentLevelIndex: 0
+  - {fileID: 11400000, guid: db54830ef8bac49a28ef29a7387e209d, type: 2}
+  - {fileID: 11400000, guid: 8cf3a86132dc14ca6b375de657ec0e7b, type: 2}
+  - {fileID: 11400000, guid: 842ab03a1c95a4efc8c69c2b9569ca77, type: 2}
   levelTransitionDelay: 1.5
+  restartDelay: 1.5
   gridManager: {fileID: 0}
