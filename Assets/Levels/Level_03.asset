@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 3
   levelNumber: 3
-  width: 4
-  height: 3
-  _theseusStartPosition: {x: 1, y: 2}
-  _minotaurStartPosition: {x: 1, y: 0}
-  _exitPosition: {x: 3, y: 1}
+  width: 8
+  height: 7
+  _theseusStartPosition: {x: 4, y: 4}
+  _minotaurStartPosition: {x: 4, y: 5}
+  _exitPosition: {x: 6, y: 6}
   cells:
   - wallUp: 0
     wallDown: 1
@@ -33,7 +33,27 @@ MonoBehaviour:
   - wallUp: 0
     wallDown: 1
     wallLeft: 0
-    wallRight: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
+    wallLeft: 0
+    wallRight: 0
     hasExit: 0
   - wallUp: 0
     wallDown: 1
@@ -45,8 +65,148 @@ MonoBehaviour:
     wallLeft: 1
     wallRight: 0
     hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 1
+    wallLeft: 1
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
   - wallUp: 1
     wallDown: 1
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
     wallLeft: 0
     wallRight: 1
     hasExit: 0
@@ -59,22 +219,82 @@ MonoBehaviour:
     wallDown: 0
     wallLeft: 0
     wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 0
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 1
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 1
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 1
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
+    hasExit: 0
+  - wallUp: 1
+    wallDown: 0
+    wallLeft: 0
+    wallRight: 0
     hasExit: 1
-  - wallUp: 1
-    wallDown: 0
-    wallLeft: 1
-    wallRight: 0
-    hasExit: 0
-  - wallUp: 1
-    wallDown: 0
-    wallLeft: 0
-    wallRight: 0
-    hasExit: 0
-  - wallUp: 1
-    wallDown: 0
-    wallLeft: 0
-    wallRight: 1
-    hasExit: 0
   - wallUp: 1
     wallDown: 0
     wallLeft: 0
