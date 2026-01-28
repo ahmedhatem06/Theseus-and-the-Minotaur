@@ -49,6 +49,8 @@ public class LevelsManager : MonoBehaviour
         }
 
         LoadCurrentLevel();
+
+        gridManager.SendTheseusAndMinotaur();
     }
 
     private void OnDisable()

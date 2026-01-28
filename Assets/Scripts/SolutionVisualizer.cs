@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,16 +49,18 @@ public class SolutionVisualizer : MonoBehaviour
         {
             Debug.LogError(
                 "GridManager not found! Please assign it in the inspector, SolutionVisualizer is not initialized.");
-            return;
         }
+    }
 
+    private void OnEnable()
+    {
         // Subscribe to level events to clear solution when level changes
         GameEvents.OnLevelLoaded += OnLevelChanged;
         GameEvents.OnGameWon += OnLevelChanged;
         GameEvents.OnGameLost += OnLevelChanged;
     }
 
-    void OnDestroy()
+    private void OnDisable()
     {
         // Unsubscribe from events
         GameEvents.OnLevelLoaded -= OnLevelChanged;

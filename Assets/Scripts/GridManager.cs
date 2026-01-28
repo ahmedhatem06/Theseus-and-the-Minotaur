@@ -70,12 +70,16 @@ public class GridManager : MonoBehaviour
 
         // Setup characters
         SetupCharacters(levelData);
-
-        turnSystem.GetPlayers(theseus, minotaur);
-        gameStateController.Initialize(this, theseus, minotaur);
+        
         turnSystem.LevelLoaded();
 
         turnHistory.Clear();
+    }
+
+    public void AssignPlayersToSystems()
+    {
+        turnSystem.GetPlayers(theseus, minotaur);
+        gameStateController.Initialize(this, theseus, minotaur);
     }
 
     /// <summary>
