@@ -50,7 +50,7 @@ public class LevelsManager : MonoBehaviour
 
         LoadCurrentLevel();
 
-        gridManager.SendTheseusAndMinotaur();
+        gridManager.AssignPlayersToSystems();
     }
 
     private void OnDisable()
