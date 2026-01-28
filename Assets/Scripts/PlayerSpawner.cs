@@ -8,7 +8,7 @@ public class PlayerSpawner : MonoBehaviour
     private Theseus theseus;
     private Minotaur minotaur;
 
-    public Theseus SpawnTheseus(GridManager gridManager, Vector2Int startPos)
+    public Theseus SpawnTheseus(Vector2Int startPos)
     {
         if (theseus != null)
         {
@@ -23,11 +23,11 @@ public class PlayerSpawner : MonoBehaviour
             theseus = theseusObject.AddComponent<Theseus>();
         }
 
-        theseus.Initialize(gridManager, startPos);
+        theseus.Initialize(startPos);
         return theseus;
     }
 
-    public Minotaur SpawnMinotaur(GridManager gridManager, Vector2Int startPos)
+    public Minotaur SpawnMinotaur(Vector2Int startPos)
     {
         if (minotaur != null)
         {
@@ -42,7 +42,7 @@ public class PlayerSpawner : MonoBehaviour
             minotaur = minotaurObject.AddComponent<Minotaur>();
         }
 
-        minotaur.Initialize(gridManager, startPos);
+        minotaur.Initialize(startPos);
         return minotaur;
     }
 }

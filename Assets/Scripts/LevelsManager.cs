@@ -11,8 +11,7 @@ public class LevelsManager : MonoBehaviour
     private float levelTransitionDelay = 1.5f;
 
     [SerializeField] private float restartDelay = 1.5f;
-
-    [Header("References")] [SerializeField]
+    
     private GridManager gridManager;
 
     private int currentLevelIndex;
@@ -35,6 +34,8 @@ public class LevelsManager : MonoBehaviour
 
     private void OnGameStarted()
     {
+        gridManager = GridManager.instance;
+        
         if (levels == null || levels.Length == 0)
         {
             Debug.LogError("No levels assigned!");

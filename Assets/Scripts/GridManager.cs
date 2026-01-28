@@ -22,6 +22,20 @@ public class GridManager : MonoBehaviour
     private bool isProcessingTurn;
     private bool gameOver;
 
+    public static GridManager instance { get; private set; }
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
     private void OnEnable()
     {
         GameEvents.OnTheseusMoved += TheseusMoved;
@@ -109,7 +123,7 @@ public class GridManager : MonoBehaviour
     private void TheseusMoved()
     {
         if (isProcessingTurn) return;
-        StartCoroutine(ProcessTurn(false));
+        StartCoroutine(ProcessTurn());
     }
 
     /// <summary>
@@ -141,7 +155,7 @@ public class GridManager : MonoBehaviour
         // Reset game state
         gameOver = false;
         isProcessingTurn = false;
-        
+
         turnHistory.Clear();
     }
 
@@ -255,8 +269,8 @@ public class GridManager : MonoBehaviour
         Vector2Int theseusStartPos = levelData.theseusStartPosition;
         Vector2Int minotaurStartPos = levelData.minotaurStartPosition;
 
-        theseus = playerSpawner.SpawnTheseus(this, theseusStartPos);
-        minotaur = playerSpawner.SpawnMinotaur(this, minotaurStartPos);
+        theseus = playerSpawner.SpawnTheseus(theseusStartPos);
+        minotaur = playerSpawner.SpawnMinotaur(minotaurStartPos);
 
         Debug.Log($"Theseus spawned at {theseusStartPos}, Minotaur at {minotaurStartPos}, Exit at {exitPos}");
     }

@@ -1022,6 +1022,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -257.325
       objectReference: {fileID: 0}
+    - target: {fileID: 6978489649744950874, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6978489649744950874, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6978489649744950874, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6978489649744950874, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6978489649744950874, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7364511997944294368, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1210,6 +1230,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8709032624587007293, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8709032624587007293, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8709032624587007293, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8709032624587007293, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8709032624587007293, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8738458474116841023, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1225,6 +1265,30 @@ PrefabInstance:
     - target: {fileID: 8738458474116841023, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 313.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 9034256015923788032, guid: 4be019d0dc687477e8ac4915f21379eb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -477.87494
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1300,10 +1364,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Levels Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 3333127798367357656, guid: 2b670e7e619db421681627354250d692, type: 3}
-      propertyPath: gridManager
-      value: 
-      objectReference: {fileID: 1602113797}
     - target: {fileID: 6628246250332787601, guid: 2b670e7e619db421681627354250d692, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

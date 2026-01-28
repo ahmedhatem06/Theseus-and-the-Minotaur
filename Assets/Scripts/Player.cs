@@ -7,11 +7,11 @@ public class Player : MonoBehaviour
     protected GridManager gridManager;
     protected Vector2Int gridPos;
     public Vector2Int GridPos => gridPos;
-    protected bool isMoving = false;
+    protected bool isMoving;
 
-    public void Initialize(GridManager grid, Vector2Int startPos)
+    public void Initialize(Vector2Int startPos)
     {
-        gridManager = grid;
+        gridManager = GridManager.instance;
         gridPos = startPos;
         UpdateWorldPosition(false);
     }

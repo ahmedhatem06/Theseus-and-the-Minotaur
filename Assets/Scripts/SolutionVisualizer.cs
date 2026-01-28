@@ -21,12 +21,11 @@ public class SolutionVisualizer : MonoBehaviour
     [Header("Animation")] [SerializeField] private float stepDelay = 0.8f;
 
     [Header("References")] [SerializeField]
-    private GridManager gridManager;
-
-    [SerializeField] private LevelsManager levelsManager;
+    private LevelsManager levelsManager;
 
     [SerializeField] private MazeSolver solver;
 
+    private GridManager gridManager;
     private LineRenderer theseusPathLine;
     private LineRenderer minotaurPathLine;
     private List<GameObject> positionMarkers = new();
@@ -34,6 +33,7 @@ public class SolutionVisualizer : MonoBehaviour
     private List<MazeSolver.Move> currentSolution;
     private bool isPlayingSolution;
     private Coroutine playRoutine;
+
     void Start()
     {
         SetupLineRenderers();
@@ -43,14 +43,13 @@ public class SolutionVisualizer : MonoBehaviour
             solver = gameObject.AddComponent<MazeSolver>();
         }
 
-        // Find GridManager if not assigned
+        gridManager = GridManager.instance;
+
         if (gridManager == null)
         {
-            gridManager = FindFirstObjectByType<GridManager>();
-            if (gridManager == null)
-            {
-                Debug.LogError("GridManager not found! Please assign it in the inspector.");
-            }
+            Debug.LogError(
+                "GridManager not found! Please assign it in the inspector, SolutionVisualizer is not initialized.");
+            return;
         }
 
         // Subscribe to level events to clear solution when level changes
@@ -71,7 +70,7 @@ public class SolutionVisualizer : MonoBehaviour
     {
         StopAndClearSolution();
     }
-    
+
     private void StopAndClearSolution()
     {
         // Stop animation coroutine if running
@@ -247,7 +246,7 @@ public class SolutionVisualizer : MonoBehaviour
             yield break;
 
         isPlayingSolution = true;
-        
+
         if (currentSolution == null || currentSolution.Count == 0)
         {
             Debug.LogWarning("No solution to animate! Press S to solve first.");
