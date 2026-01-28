@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 2
   levelNumber: 2
+  levelDescription: 2
   width: 5
   height: 5
   _theseusStartPosition: {x: 0, y: 0}

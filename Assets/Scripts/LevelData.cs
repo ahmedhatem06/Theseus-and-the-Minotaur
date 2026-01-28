@@ -6,6 +6,7 @@ public class LevelData : ScriptableObject
     [Header("Level Info")]
     public string levelName = "Level 1";
     public int levelNumber = 1;
+    public string levelDescription;
     
     [Header("Grid Size")]
     public int width = 8;

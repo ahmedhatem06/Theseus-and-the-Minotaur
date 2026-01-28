@@ -102,6 +102,7 @@ public class LevelsManager : MonoBehaviour
         gridManager.LoadLevel(levelData);
 
         GameEvents.LevelLoaded(currentLevelIndex);
+        GameEvents.NewLevelLoaded(levelData.levelDescription);
     }
 
     /// <summary>

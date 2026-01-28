@@ -26,6 +26,9 @@ public static class GameEvents
     
     //Event triggered when a turn has been completed.
     public static event Action OnTurnCompleted;
+    
+    //Event triggered for commentary UI.
+    public static event Action<string> OnNewLevelLoad;
 
     // Methods to invoke events
     public static void TheseusMoved()
@@ -66,5 +69,10 @@ public static class GameEvents
     public static void TurnCompleted()
     {
         OnTurnCompleted?.Invoke();
+    }
+
+    public static void NewLevelLoaded(string text)
+    {
+        OnNewLevelLoad?.Invoke(text);
     }
 }
