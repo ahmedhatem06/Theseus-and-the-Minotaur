@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Manages the turn-based game flow.
+/// Handles player movement, Minotaur AI response, turn processing, and undo functionality.
+/// </summary>
 public class TurnSystem : MonoBehaviour
 {
     private TurnHistory turnHistory;
@@ -44,7 +48,11 @@ public class TurnSystem : MonoBehaviour
         theseus = t;
         minotaur = m;
     }
-
+    
+    /// <summary>
+    /// Polls for player input each frame.
+    /// Only accepts input when not processing a turn and game is not over.
+    /// </summary>
     private void Update()
     {
         if (theseus != null && !isProcessingTurn && !gameOver)
@@ -52,13 +60,17 @@ public class TurnSystem : MonoBehaviour
             theseus.HandleInput();
         }
     }
-
+    
     private void UndoRequested()
     {
         StartCoroutine(PerformUndo());
     }
-
-    //Animated Undo.
+    
+    /// <summary>
+    // /// Performs an animated undo of the last turn.
+    // /// Moves Theseus back first, then Minotaur moves back twice in reverse order.
+    // /// </summary>
+    // /// <returns>Coroutine that completes when undo animation is finished</returns>
     private IEnumerator PerformUndo()
     {
         isProcessingTurn = true;
@@ -70,37 +82,48 @@ public class TurnSystem : MonoBehaviour
             yield break;
         }
 
-        //Move theseus back.
+        // Move Theseus back to previous position
         yield return StartCoroutine(theseus.SetPositionCoroutine(lastTurn.theseusFromPos));
 
-        //Move Minotaur back twice.
+        // Move Minotaur back - reverse order (second move first, then first move)
         yield return StartCoroutine(minotaur.SetPositionCoroutine(lastTurn.minotaurAfterMove1));
         yield return StartCoroutine(minotaur.SetPositionCoroutine(lastTurn.minotaurFromPos));
 
         isProcessingTurn = false;
     }
 
+    /// <summary>
+    /// Event handler called when Theseus waits (W key).
+    /// Processes turn without Theseus moving.
+    /// </summary>
     private void TheseusWaited()
     {
         if (isProcessingTurn) return;
         StartCoroutine(ProcessTurn(true));
     }
 
+    /// <summary>
+    /// Processes a complete turn: records positions, moves Minotaur twice, records history.
+    /// </summary>
+    /// <param name="isWait">True if Theseus waited instead of moving</param>
+    /// <returns>Coroutine that completes when turn processing is finished</returns>
     private IEnumerator ProcessTurn(bool isWait = false)
     {
         isProcessingTurn = true;
 
-        //Store Positions.
+        // Store positions before Minotaur moves
         Vector2Int theseusStartPos = theseus.GetPositionBeforeMove();
         Vector2Int minotaurStartPos = minotaur.GridPos;
 
-        //Minotaur moves twice..
+        // Minotaur makes first move toward Theseus
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
         Vector2Int minotaurAfterMove1 = minotaur.GridPos;
 
+        // Minotaur makes second move toward Theseus
         yield return StartCoroutine(minotaur.ChaseTheseus(theseus.GridPos));
         Vector2Int minotaurAfterMove2 = minotaur.GridPos;
 
+        // Record this turn for undo functionality
         turnHistory.RecordTurn(
             theseusStartPos,
             theseus.GridPos,
@@ -113,7 +136,11 @@ public class TurnSystem : MonoBehaviour
 
         isProcessingTurn = false;
     }
-
+    
+    /// <summary>
+    /// Event handler called when Theseus successfully moves.
+    /// Initiates turn processing if not already in progress.
+    /// </summary>
     private void TheseusMoved()
     {
         if (isProcessingTurn) return;

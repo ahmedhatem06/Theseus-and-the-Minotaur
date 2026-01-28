@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Manages the game grid, cell creation, level loading, and coordinates between game systems.
+/// Acts as the central hub for spatial game logic and level data.
+/// </summary>
 public class GridManager : MonoBehaviour
 {
     [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
@@ -14,6 +18,9 @@ public class GridManager : MonoBehaviour
     private Cell[,] grid;
     private Vector2Int exitPos;
 
+    /// <summary>
+    /// Gets the position of the exit cell in grid coordinates.
+    /// </summary>
     public Vector2Int ExitPos => exitPos;
 
     // Grid dimensions from level data
@@ -22,7 +29,16 @@ public class GridManager : MonoBehaviour
     private float cellSize = 1f;
 
     public static GridManager instance { get; private set; }
-
+    
+    /// <summary>
+    /// Initializes the GridManager with required dependencies.
+    /// Should be called before loading any level.
+    /// </summary>
+    /// <param name="spawner">Reference to the PlayerSpawner for creating characters</param>
+    /// <param name="history">Reference to TurnHistory for undo functionality</param>
+    /// <param name="system">Reference to TurnSystem for game flow management</param>
+    /// <param name="gameState">Reference to GameStateController for win/loss conditions</param>
+    /// <param name="cam">Main camera reference for centering on the grid</param>
     public void Initialize(PlayerSpawner spawner, TurnHistory history, TurnSystem system, GameStateController gameState,
         Camera cam)
     {
@@ -46,8 +62,10 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Load a level from LevelData ScriptableObject
+    /// Loads a level from a LevelData ScriptableObject.
+    /// Clears any existing level, creates the grid, spawns characters, and initializes game systems.
     /// </summary>
+    /// <param name="levelData">The ScriptableObject containing level configuration (walls, positions, etc.)</param>
     public void LoadLevel(LevelData levelData)
     {
         if (levelData == null)
@@ -76,6 +94,10 @@ public class GridManager : MonoBehaviour
         turnHistory.Clear();
     }
 
+    /// <summary>
+    /// Assigns player references to the turn system and game state controller.
+    /// Must be called after characters are spawned.
+    /// </summary>
     public void AssignPlayersToSystems()
     {
         turnSystem.GetPlayers(theseus, minotaur);
@@ -83,7 +105,8 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Clear the current level
+    /// Clears the current level by destroying all cell GameObjects.
+    /// Called before loading a new level.
     /// </summary>
     private void ClearLevel()
     {
@@ -101,6 +124,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    // <summary>
+    /// Centers the camera on the grid and adjusts orthographic size to fit the entire level.
+    /// </summary>
     private void CenterCamera()
     {
         cam.transform.position = new Vector3(
@@ -111,6 +137,10 @@ public class GridManager : MonoBehaviour
         cam.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
     }
 
+    /// <summary>
+    /// Creates the grid of cells based on current width and height.
+    /// Instantiates cell prefabs at correct positions and centers the camera.
+    /// </summary>
     private void CreateGrid()
     {
         grid = new Cell[width, height];
@@ -139,8 +169,10 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Load grid walls and exit from LevelData
+    /// Loads wall and exit data from LevelData into the grid cells.
+    /// Copies CellData to each Cell component and updates visual representation.
     /// </summary>
+    /// <param name="levelData">The level data containing wall configurations</param>
     private void LoadGridFromLevelData(LevelData levelData)
     {
         if (levelData.cells == null || levelData.cells.Length != width * height)
@@ -173,8 +205,9 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Setup characters at their starting positions from LevelData
+    /// Spawns Theseus and the Minotaur at their starting positions defined in the level data.
     /// </summary>
+    /// <param name="levelData">Level data containing character starting positions</param>
     private void SetupCharacters(LevelData levelData)
     {
         Vector2Int theseusStartPos = levelData.theseusStartPosition;
@@ -186,11 +219,24 @@ public class GridManager : MonoBehaviour
         Debug.Log($"Theseus spawned at {theseusStartPos}, Minotaur at {minotaurStartPos}, Exit at {exitPos}");
     }
 
+    /// <summary>
+    /// Converts grid coordinates to world position.
+    /// </summary>
+    /// <param name="gridPos">Position in grid coordinates (x, y)</param>
+    /// <returns>World position as Vector3</returns>
     public Vector3 GridToWorldPos(Vector2Int gridPos)
     {
         return new Vector3(gridPos.x * cellSize, gridPos.y * cellSize, 0);
     }
 
+    
+    /// <summary>
+    /// Checks if a move from one grid position to another is valid.
+    /// Validates bounds, wall blocking, and entry permissions.
+    /// </summary>
+    /// <param name="from">Starting grid position</param>
+    /// <param name="to">Target grid position</param>
+    /// <returns>True if the move is valid, false otherwise</returns>
     public bool IsValidMove(Vector2Int from, Vector2Int to)
     {
         if (to.x < 0 || to.x >= width || to.y < 0 || to.y >= height)
