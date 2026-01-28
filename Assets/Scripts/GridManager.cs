@@ -3,11 +3,11 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     [Header("Prefabs")] [SerializeField] private GameObject cellPrefab;
-    [SerializeField] private PlayerSpawner playerSpawner;
-    [SerializeField] private TurnHistory turnHistory;
-    [SerializeField] private TurnSystem turnSystem;
-    [SerializeField] private GameStateController gameStateController;
-
+    private PlayerSpawner playerSpawner;
+    private TurnHistory turnHistory;
+    private TurnSystem turnSystem;
+    private GameStateController gameStateController;
+    private Camera cam;
     private Theseus theseus;
     private Minotaur minotaur;
 
@@ -22,6 +22,16 @@ public class GridManager : MonoBehaviour
     private float cellSize = 1f;
 
     public static GridManager instance { get; private set; }
+
+    public void Initialize(PlayerSpawner spawner, TurnHistory history, TurnSystem system, GameStateController gameState,
+        Camera cam)
+    {
+        playerSpawner = spawner;
+        turnHistory = history;
+        turnSystem = system;
+        gameStateController = gameState;
+        this.cam = cam;
+    }
 
     private void Awake()
     {
@@ -61,7 +71,7 @@ public class GridManager : MonoBehaviour
         // Setup characters
         SetupCharacters(levelData);
 
-        turnSystem.Initialize(theseus, minotaur);
+        turnSystem.GetPlayers(theseus, minotaur);
         gameStateController.Initialize(this, theseus, minotaur);
         turnSystem.LevelLoaded();
 
@@ -101,12 +111,12 @@ public class GridManager : MonoBehaviour
 
     private void CenterCamera()
     {
-        Camera.main.transform.position = new Vector3(
+        cam.transform.position = new Vector3(
             (width - 1) * cellSize / 2f,
             (height - 1) * cellSize / 2f,
             -10);
 
-        Camera.main.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
+        cam.orthographicSize = Mathf.Max(width, height) * cellSize / 2f + 1f;
     }
 
     private void CreateGrid()

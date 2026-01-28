@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TurnSystem : MonoBehaviour
 {
-    [SerializeField] private TurnHistory turnHistory;
+    private TurnHistory turnHistory;
 
     private Theseus theseus;
     private Minotaur minotaur;
@@ -34,7 +34,12 @@ public class TurnSystem : MonoBehaviour
         GameEvents.OnGameWon -= GameOver;
     }
 
-    public void Initialize(Theseus t, Minotaur m)
+    public void Initialize(TurnHistory history)
+    {
+        turnHistory = history;
+    }
+
+    public void GetPlayers(Theseus t, Minotaur m)
     {
         theseus = t;
         minotaur = m;

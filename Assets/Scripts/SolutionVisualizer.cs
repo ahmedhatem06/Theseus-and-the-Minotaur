@@ -20,7 +20,6 @@ public class SolutionVisualizer : MonoBehaviour
 
     [Header("Animation")] [SerializeField] private float stepDelay = 0.8f;
 
-    [Header("References")] [SerializeField]
     private LevelsManager levelsManager;
 
     [SerializeField] private MazeSolver solver;
@@ -448,5 +447,10 @@ public class SolutionVisualizer : MonoBehaviour
     private LevelData GetCurrentLevel()
     {
         return levelsManager?.GetCurrentLevelData();
+    }
+
+    public void Initialize(LevelsManager lManager)
+    {
+        levelsManager = lManager;
     }
 }
