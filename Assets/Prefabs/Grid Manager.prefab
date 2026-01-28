@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5566620973097115438}
   - component: {fileID: 3202706206004588298}
   - component: {fileID: 4128673938126815520}
+  - component: {fileID: 3316690204576393262}
   m_Layer: 0
   m_Name: Grid Manager
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   playerSpawner: {fileID: 0}
   turnHistory: {fileID: 3202706206004588298}
   turnSystem: {fileID: 4128673938126815520}
+  gameStateController: {fileID: 3316690204576393262}
 --- !u!114 &3202706206004588298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,3 +77,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnHistory: {fileID: 3202706206004588298}
+--- !u!114 &3316690204576393262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8527165748094214668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d302bfee08518485a9c6c6a474a5a332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

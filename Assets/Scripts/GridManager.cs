@@ -6,6 +6,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private PlayerSpawner playerSpawner;
     [SerializeField] private TurnHistory turnHistory;
     [SerializeField] private TurnSystem turnSystem;
+    [SerializeField] private GameStateController gameStateController;
 
     private Theseus theseus;
     private Minotaur minotaur;
@@ -60,8 +61,8 @@ public class GridManager : MonoBehaviour
         // Setup characters
         SetupCharacters(levelData);
 
-        turnSystem.Initialize(this, theseus, minotaur);
-        
+        turnSystem.Initialize(theseus, minotaur);
+        gameStateController.Initialize(this, theseus, minotaur);
         turnSystem.LevelLoaded();
 
         turnHistory.Clear();

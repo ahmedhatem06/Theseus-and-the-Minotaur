@@ -23,6 +23,9 @@ public static class GameEvents
 
     //Event triggered when undo is requested.
     public static event Action OnUndoRequested;
+    
+    //Event triggered when a turn has been completed.
+    public static event Action OnTurnCompleted;
 
     // Methods to invoke events
     public static void TheseusMoved()
@@ -58,5 +61,10 @@ public static class GameEvents
     public static void UndoRequested()
     {
         OnUndoRequested?.Invoke();
+    }
+    
+    public static void TurnCompleted()
+    {
+        OnTurnCompleted?.Invoke();
     }
 }

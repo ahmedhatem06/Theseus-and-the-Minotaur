@@ -5,17 +5,24 @@ public class TurnSystem : MonoBehaviour
 {
     [SerializeField] private TurnHistory turnHistory;
 
-    private GridManager gridManager;
     private Theseus theseus;
     private Minotaur minotaur;
 
     private bool isProcessingTurn;
     private bool gameOver;
+
     private void OnEnable()
     {
         GameEvents.OnTheseusMoved += TheseusMoved;
         GameEvents.OnTheseusWaited += TheseusWaited;
         GameEvents.OnUndoRequested += UndoRequested;
+        GameEvents.OnGameLost += GameOver;
+        GameEvents.OnGameWon += GameOver;
+    }
+
+    private void GameOver()
+    {
+        gameOver = true;
     }
 
     private void OnDisable()
@@ -23,11 +30,12 @@ public class TurnSystem : MonoBehaviour
         GameEvents.OnTheseusMoved -= TheseusMoved;
         GameEvents.OnTheseusWaited -= TheseusWaited;
         GameEvents.OnUndoRequested -= UndoRequested;
+        GameEvents.OnGameLost -= GameOver;
+        GameEvents.OnGameWon -= GameOver;
     }
 
-    public void Initialize(GridManager grid, Theseus t, Minotaur m)
+    public void Initialize(Theseus t, Minotaur m)
     {
-        gridManager = grid;
         theseus = t;
         minotaur = m;
     }
@@ -96,7 +104,7 @@ public class TurnSystem : MonoBehaviour
             minotaurAfterMove2,
             isWait);
 
-        CheckGameState();
+        GameEvents.TurnCompleted();
 
         isProcessingTurn = false;
     }
@@ -105,22 +113,6 @@ public class TurnSystem : MonoBehaviour
     {
         if (isProcessingTurn) return;
         StartCoroutine(ProcessTurn());
-    }
-
-    private void CheckGameState()
-    {
-        if (theseus.GridPos == minotaur.GridPos)
-        {
-            GameEvents.GameLost();
-            gameOver = true;
-            Debug.Log("Game Over | Lost");
-        }
-        else if (theseus.GridPos == gridManager.ExitPos)
-        {
-            GameEvents.GameWon();
-            gameOver = true;
-            Debug.Log("Game Over | Won");
-        }
     }
 
     public void LevelLoaded()
