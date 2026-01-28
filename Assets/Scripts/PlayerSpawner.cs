@@ -12,7 +12,8 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (theseus != null)
         {
-            Destroy(theseus.gameObject);
+            theseus.Initialize(startPos);
+            return theseus;
         }
 
         GameObject theseusObject = Instantiate(theseusPrefab);
@@ -31,7 +32,8 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (minotaur != null)
         {
-            Destroy(minotaur.gameObject);
+            minotaur.Initialize(startPos);
+            return minotaur;
         }
 
         GameObject minotaurObject = Instantiate(minotaurPrefab);

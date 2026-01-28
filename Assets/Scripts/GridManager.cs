@@ -95,18 +95,6 @@ public class GridManager : MonoBehaviour
 
             grid = null;
         }
-
-        if (theseus != null)
-        {
-            Destroy(theseus.gameObject);
-            theseus = null;
-        }
-
-        if (minotaur != null)
-        {
-            Destroy(minotaur.gameObject);
-            minotaur = null;
-        }
     }
 
     private void CenterCamera()
